@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="TradeCentric\Invoice\Api\InvoiceServiceInterface" type="TradeCentric\Invoice\Model\InvoiceService"/>
+    <preference for="TradeCentric\Invoice\Api\ModuleMetadataInterface" type="TradeCentric\Invoice\Model\ModuleMetadata"/>
+    <preference for="TradeCentric\Invoice\Api\RequestBuilderInterface" type="TradeCentric\Invoice\Model\RequestBuilder"/>
+    <preference for="TradeCentric\Invoice\Api\RequestInterface" type="TradeCentric\Invoice\Model\Request"/>
+    <preference for="TradeCentric\Invoice\Api\StoreLoggerInterface" type="TradeCentric\Invoice\Logger\Logger"/>
+    <preference for="TradeCentric\Invoice\Api\ResultValidatorInterface" type="TradeCentric\Invoice\Model\ResultValidator"/>
+
+    <type name="TradeCentric\Invoice\Model\RequestBuilder">
+        <arguments>
+            <argument name="requestBuilderPool" xsi:type="array">
+                <item name="headers" xsi:type="array">
+                    <item name="type" xsi:type="string">TradeCentric\Invoice\Model\RequestBuilder\HeadersRequestElement</item>
+                    <item name="sortOrder" xsi:type="string">5</item>
+                </item>
+                <item name="uri" xsi:type="array">
+                    <item name="type" xsi:type="string">TradeCentric\Invoice\Model\RequestBuilder\UriRequestElement</item>
+                    <item name="sortOrder" xsi:type="string">10</item>
+                </item>
+                <item name="params" xsi:type="array">
+                    <item name="type" xsi:type="string">TradeCentric\Invoice\Model\RequestBuilder\ParamsRequestElement</item>
+                    <item name="sortOrder" xsi:type="string">15</item>
+                </item>
+                <item name="params_header" xsi:type="array">
+                    <item name="type" xsi:type="string">TradeCentric\Invoice\Model\RequestBuilder\InvoiceHeaderParamsRequestElement</item>
+                    <item name="sortOrder" xsi:type="string">20</item>
+                </item>
+                <item name="params_details" xsi:type="array">
+                    <item name="type" xsi:type="string">TradeCentric\Invoice\Model\RequestBuilder\InvoiceDetailsParamsRequestElement</item>
+                    <item name="sortOrder" xsi:type="string">25</item>
+                </item>
+                <item name="params_items" xsi:type="array">
+                    <item name="type" xsi:type="string">TradeCentric\Invoice\Model\RequestBuilder\InvoiceItemsParamsRequestElement</item>
+                    <item name="sortOrder" xsi:type="string">30</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="InvoiceExportLogger" type="Monolog\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">invoice_export</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="debug" xsi:type="object">TradeCentric\Invoice\Logger\Handlers\Debug</item>
+                <item name="system" xsi:type="object">TradeCentric\Invoice\Logger\Handlers\Exception</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="TradeCentric\Invoice\Logger\Logger">
+        <arguments>
+            <argument name="logger" xsi:type="object">InvoiceExportLogger</argument>
+        </arguments>
+    </type>
+
+</config>

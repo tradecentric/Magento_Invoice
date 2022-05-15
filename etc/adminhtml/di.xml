@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Backend\Block\Widget\Button\Toolbar">
+        <plugin name="tradecentric_invoice_widget_button_toolbar_plugin" type="TradeCentric\Invoice\Plugin\ToolbarButtonPlugin" />
+    </type>
+
+</config>
