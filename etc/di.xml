@@ -55,4 +55,12 @@
         </arguments>
     </type>
 
+    <virtualType name="TradeCentric\Invoice\Block\Forms\Config\Version" type="TradeCentric\Version\Block\Forms\Config\Version">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="module_name" xsi:type="string">TradeCentric_Invoice</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
 </config>
