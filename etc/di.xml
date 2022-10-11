@@ -57,10 +57,22 @@
 
     <virtualType name="TradeCentric\Invoice\Block\Forms\Config\Version" type="TradeCentric\Version\Block\Forms\Config\Version">
         <arguments>
-            <argument name="data" xsi:type="array">
-                <item name="module_name" xsi:type="string">TradeCentric_Invoice</item>
-            </argument>
+            <argument name="helper" xsi:type="object">TradeCentric\Invoice\Helper\Module</argument>
         </arguments>
     </virtualType>
+
+    <type name="TradeCentric\Invoice\Model\Transfer\QuoteDataHandlers\Version">
+        <arguments>
+            <argument name="helper" xsi:type="object">TradeCentric\Invoice\Helper\Module</argument>
+        </arguments>
+    </type>
+
+    <type name="Punchout2Go\Punchout\Model\Transfer\QuoteDataPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="invoice_version" xsi:type="object">TradeCentric\Invoice\Model\Transfer\QuoteDataHandlers\Version</item>
+            </argument>
+        </arguments>
+    </type>
 
 </config>
