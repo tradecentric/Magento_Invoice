@@ -1,5 +1,7 @@
 TradeCentric - Invoice
 ===========
-### 3.0.0 (2022-06-09)
+### 3.0.1 (2022-11-21)
+* Added sending version of the extension back to TradeCentric in the payload json
 
+### 3.0.0 (2022-06-09)
 * Initial release
