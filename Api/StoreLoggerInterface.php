@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace TradeCentric\Invoice\Api;
 
-
 /**
  * Interface StoreLoggerInterface
- * @package Punchout2Go\PurchaseOrder\Api
+ * @package TradeCentric\PurchaseOrder\Api
  */
 interface StoreLoggerInterface
 {

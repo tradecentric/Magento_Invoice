@@ -15,6 +15,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     const XML_PATH_TRADECENTRIC_DEBUG_ENABLED = 'tradecentric_invoice/settings/logging';
     const XML_PATH_TRADECENTRIC_INVOICE_URI = 'tradecentric_invoice/api/url';
     const XML_PATH_TRADECENTRIC_INVOICE_API_KEY = 'tradecentric_invoice/api/key';
+    const XML_PATH_TRADECENTRIC_INVOICE_ON_EVENT = 'tradecentric_invoice/settings/invoice_on_event';
 
     /**
      * @param null $storeId
@@ -63,6 +64,19 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return $this->scopeConfig->isSetFlag(
             static::XML_PATH_TRADECENTRIC_DEBUG_ENABLED,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * @param null $storeId
+     * @return int
+     */
+    public function getOnEvent($storeId = null)
+    {
+        return (int) $this->scopeConfig->getValue(
+            static::XML_PATH_TRADECENTRIC_INVOICE_ON_EVENT,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );

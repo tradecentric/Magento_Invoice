@@ -7,6 +7,8 @@
     <preference for="TradeCentric\Invoice\Api\RequestInterface" type="TradeCentric\Invoice\Model\Request"/>
     <preference for="TradeCentric\Invoice\Api\StoreLoggerInterface" type="TradeCentric\Invoice\Logger\Logger"/>
     <preference for="TradeCentric\Invoice\Api\ResultValidatorInterface" type="TradeCentric\Invoice\Model\ResultValidator"/>
+    <preference for="TradeCentric\Invoice\Api\RequestResultInterface" type="TradeCentric\Invoice\Model\RequestResult"/>
+    <preference for="TradeCentric\Invoice\Api\InvoiceSenderInterface" type="TradeCentric\Invoice\Model\InvoiceService\InvoiceSender"/>
 
     <type name="TradeCentric\Invoice\Model\RequestBuilder">
         <arguments>

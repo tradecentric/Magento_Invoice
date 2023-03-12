@@ -7,9 +7,9 @@ use Magento\Backend\Block\Widget\Button\ButtonList;
 use Magento\Backend\Block\Widget\Button\Toolbar as ToolbarContext;
 use Magento\Framework\AuthorizationInterface;
 use Magento\Framework\View\Element\AbstractBlock;
+use TradeCentric\Invoice\Api\InvoiceServiceInterface;
 use TradeCentric\Invoice\Helper\Data;
 use TradeCentric\Invoice\Controller\Adminhtml\Sendinvoice\Index;
-
 
 /**
  * Class ToolbarButtonPlugin
@@ -18,26 +18,25 @@ use TradeCentric\Invoice\Controller\Adminhtml\Sendinvoice\Index;
 class ToolbarButtonPlugin
 {
     /**
-     * @var Data
-     */
-    protected $helper;
-
-    /**
      * @var AuthorizationInterface
      */
     protected $authorization;
 
     /**
-     * ToolbarButtonPlugin constructor.
+     * @var InvoiceServiceInterface
+     */
+    protected $invoiceService;
+
+    /**
      * @param AuthorizationInterface $authorization
-     * @param Data $helper
+     * @param InvoiceServiceInterface $invoiceService
      */
     public function __construct(
         AuthorizationInterface $authorization,
-        Data $helper
+        InvoiceServiceInterface $invoiceService
     ) {
         $this->authorization = $authorization;
-        $this->helper = $helper;
+        $this->invoiceService = $invoiceService;
     }
 
     /**
@@ -61,7 +60,7 @@ class ToolbarButtonPlugin
         }
 
         $invoice = $context->getInvoice();
-        if (!$this->helper->isEnabled($invoice->getStoreId())) {
+        if (!$this->invoiceService->isOrderReadyToManualInvoiceSend($invoice->getOrder())) {
             return [$context, $buttonList];
         }
         $buttonList->add('transfer',

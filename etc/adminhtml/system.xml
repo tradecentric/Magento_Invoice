@@ -28,6 +28,13 @@
                     <label>Logging</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="invoice_on_event" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Invoice On Event</label>
+                    <source_model>TradeCentric\Invoice\Model\System\Config\Source\InvoiceEvents</source_model>
+                    <!--<comment><![CDATA[Controls session login behaviors.<br/>
+                                    <b>Anonymous</b> gives the user a "PunchOut session" but they are not actually logged in as a specific customer account.<br/>
+                                    <b>Login</b> authenticates the user as a particular customer account.]]></comment>-->
+                </field>
             </group>
             <group id="current_version" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Version</label>

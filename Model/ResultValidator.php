@@ -7,6 +7,7 @@ use Magento\Framework\Validation\ValidationResult;
 use Magento\Framework\Validation\ValidationResultFactory;
 use Magento\Sales\Api\Data\InvoiceInterface;
 use TradeCentric\Invoice\Api\ResultValidatorInterface;
+use TradeCentric\Invoice\Api\RequestResultInterface;
 
 /**
  * Class ResultValidator
@@ -29,20 +30,19 @@ class ResultValidator implements ResultValidatorInterface
     }
 
     /**
-     * @param \Zend_Http_Response $response
-     * @param InvoiceInterface $invoice
+     * @param RequestResultInterface $response
+     * @return ValidationResult
      */
-    public function validate(\Zend_Http_Response $response, array $body): ValidationResult
+    public function validate(RequestResultInterface $response): ValidationResult
     {
-        return $this->resultFactory->create(['errors' => $this->getError($response, $body)]);
+        return $this->resultFactory->create(['errors' => $this->getError($response)]);
     }
 
     /**
-     * @param \Zend_Http_Response $response
-     * @param array $body
-     * @return string
+     * @param RequestResultInterface $response
+     * @return array|string[]
      */
-    protected function getError(\Zend_Http_Response $response, array $body): array
+    protected function getError(RequestResultInterface $response): array
     {
         if (!$response->isSuccessful()) {
             return ["Invoice was not transferred through TradeCentric. 103 (see logs for details)"];
@@ -50,11 +50,12 @@ class ResultValidator implements ResultValidatorInterface
         if ($response->getHeader('content-type') !== "application/json") {
             return ['Invoice transfer failed, Content Type was not Application/JSON. See var/log/punch2go-invoices/debug.log for details.'];
         }
-        if (!empty($body['errors'])) {
+        $body = $response->getBody();
+        if (isset($body['errors'])) {
             $errors = $body['errors']['message'];
             return ['Invoice transfer failed with error - ' . $errors];
         }
-        if (empty($body)) {
+        if (!$body) {
             return ['Invoice transfer failed, response is invalid or empty'];
         }
         return [];

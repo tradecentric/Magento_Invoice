@@ -10,7 +10,7 @@ use Magento\Framework\Serialize\Serializer\Json;
 
 /**
  * Class ModuleVersion
- * @package Punchout2Go\Punchout\Model
+ * @package TradeCentric\Punchout\Model
  */
 class ModuleVersion
 {

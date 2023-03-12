@@ -7,7 +7,7 @@ use TradeCentric\Version\Helper\ModuleHelper;
 
 /**
  * Class Module
- * @package Punchout2Go\Punchout\Helper
+ * @package TradeCentric\Punchout\Helper
  */
 class Module extends ModuleHelper
 {

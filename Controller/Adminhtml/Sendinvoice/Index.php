@@ -13,7 +13,7 @@ use TradeCentric\Invoice\Helper\Data;
 
 /**
  * Class Index
- * @package Punchout2go\Invoice\Controller\Adminhtml\Sendinvoice
+ * @package TradeCentric\Invoice\Controller\Adminhtml\Sendinvoice
  */
 class Index extends \Magento\Backend\App\Action
 {

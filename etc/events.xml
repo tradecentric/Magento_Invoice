@@ -1,0 +1,8 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <event name="sales_order_invoice_register">
+        <observer name="punchout_register_invoice" instance="TradeCentric\Invoice\Observer\RegisterInvoiceObserver" />
+    </event>
+    <event name="sales_order_save_commit_after">
+        <observer name="punchout_save_order_after" instance="TradeCentric\Invoice\Observer\SaveOrderAfterObserver" />
+    </event>
+</config>

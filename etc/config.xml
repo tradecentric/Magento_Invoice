@@ -6,6 +6,7 @@
                 <key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
             </api>
             <settings>
+                <invoice_on_event>1</invoice_on_event>
                 <active>1</active>
                 <logging>0</logging>
             </settings>

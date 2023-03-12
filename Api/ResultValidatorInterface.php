@@ -12,9 +12,8 @@ use Magento\Framework\Validation\ValidationResult;
 interface ResultValidatorInterface
 {
     /**
-     * @param \Zend_Http_Response $response
-     * @param array $body
+     * @param RequestResultInterface $result
      * @return ValidationResult
      */
-    public function validate(\Zend_Http_Response $response, array $body): ValidationResult;
+    public function validate(RequestResultInterface $result): ValidationResult;
 }
