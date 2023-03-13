@@ -25,9 +25,8 @@ class InvoiceItemsParamsRequestElement implements RequestBuildElementInterface
             if (!$orderItem || $orderItem->getParentItemId()) {
                 continue;
             }
-            $lineLumber = $orderItem->getLineNumber();
             $result[] = array(
-                'line_number' => $lineLumber,
+                'line_number' => $orderItem->getExtensionAttributes()->getLineNumber(),
                 'quantity' => $invoiceItem->getQty() ,
                 'part_id' => $invoiceItem->getSku(),
                 'aux_part_id' => '',

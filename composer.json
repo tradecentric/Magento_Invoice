@@ -4,12 +4,13 @@
   "require": {
     "php": "^7.0||^8.0",
     "tradecentric/module-version": "3.0.1",
-    "tradecentric/module-punchout": "*"
+    "tradecentric/module-punchout": "*",
+    "tradecentric/module-purchase-order": "^3.0"
   },
   "suggest": {
   },
   "type": "magento2-module",
-  "version": "3.0.2-beta",
+  "version": "3.0.2-beta2",
   "license": [
     "OSL-3.0",
     "AFL-3.0"
