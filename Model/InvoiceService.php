@@ -14,7 +14,6 @@ use TradeCentric\Invoice\Api\ResultValidatorInterface;
 use TradeCentric\Invoice\Api\StoreLoggerInterface;
 use TradeCentric\Invoice\Api\InvoiceSenderInterface;
 use TradeCentric\Invoice\Helper\Data;
-use TradeCentric\Invoice\Model\InvoiceService\InvoiceRegistrationContext;
 use TradeCentric\Invoice\Model\System\Config\Source\InvoiceEvents;
 use Magento\Sales\Model\Order;
 
@@ -45,11 +44,6 @@ class InvoiceService implements InvoiceServiceInterface
     protected $invoiceSender;
 
     /**
-     * @var InvoiceRegistrationContext
-     */
-    protected $invoiceRegistrationContext;
-
-    /**
      * @var Data
      */
     protected $helper;
@@ -59,7 +53,6 @@ class InvoiceService implements InvoiceServiceInterface
      * @param ResultValidatorInterface $resultValidator
      * @param StoreLoggerInterface $logger
      * @param InvoiceSenderInterface $invoiceSender
-     * @param InvoiceRegistrationContext $invoiceRegistrationContext
      * @param Data $helper
      */
     public function __construct(
@@ -67,7 +60,6 @@ class InvoiceService implements InvoiceServiceInterface
         ResultValidatorInterface $resultValidator,
         StoreLoggerInterface $logger,
         InvoiceSenderInterface $invoiceSender,
-        InvoiceRegistrationContext $invoiceRegistrationContext,
         Data $helper
     ) {
         $this->requestBuilder = $requestBuilder;
@@ -75,7 +67,6 @@ class InvoiceService implements InvoiceServiceInterface
         $this->logger = $logger;
         $this->invoiceSender = $invoiceSender;
         $this->helper = $helper;
-        $this->invoiceRegistrationContext = $invoiceRegistrationContext;
     }
 
     /**
@@ -89,8 +80,7 @@ class InvoiceService implements InvoiceServiceInterface
         }
         $onEvent = $this->helper->getOnEvent($order->getStoreId());
         if ($onEvent === InvoiceEvents::ON_INVOICE) {
-            return $order->hasInvoices()
-                && $this->invoiceRegistrationContext->isInvoiceRegistered();
+            return $order->hasInvoices();
         }
         if ($onEvent === InvoiceEvents::ON_COMPLETE) {
             return $order->hasInvoices()

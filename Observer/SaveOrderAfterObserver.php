@@ -6,6 +6,7 @@ namespace TradeCentric\Invoice\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
+use Magento\Sales\Model\Order;
 use TradeCentric\Invoice\Api\InvoiceServiceInterface;
 use TradeCentric\Invoice\Api\StoreLoggerInterface;
 
@@ -21,10 +22,10 @@ class SaveOrderAfterObserver implements ObserverInterface
     protected $invoiceService;
 
     /**
-     * @var InvoiceRepositoryInterface 
+     * @var InvoiceRepositoryInterface
      */
     protected $invoiceRepository;
-    
+
     /**
      * @var StoreLoggerInterface
      */
@@ -56,9 +57,13 @@ class SaveOrderAfterObserver implements ObserverInterface
             return;
         }
         try {
-            $invoice = current($order->getInvoiceCollection()->getItems());
-            $this->invoiceService->sendInvoice($invoice);
-            $this->invoiceRepository->save($invoice);
+            foreach ($order->getInvoiceCollection() as $invoice) {
+                if ($order->getState() != Order::STATE_COMPLETE && !$invoice->getIsCreated()) {
+                    continue;
+                }
+                $this->invoiceService->sendInvoice($invoice);
+                $this->invoiceRepository->save($invoice);
+            }
         } catch (\Exception $e) {
             $this->storeLogger->setStoreId($order->getStoreId());
             $this->storeLogger->error($e->getMessage());
