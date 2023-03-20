@@ -5,20 +5,21 @@ namespace TradeCentric\Invoice\Model;
 
 use TradeCentric\Invoice\Api\RequestResultInterface;
 use Magento\Framework\Serialize\Serializer\Json;
+use Laminas\Http\Response;
 
 class RequestResult implements RequestResultInterface
 {
     /** @var \Zend_Http_Response  */
     private $response;
-    
+
     /** @var Json  */
     private $json;
 
     /**
-     * @param \Zend_Http_Response $response
+     * @param $response
      * @param Json $json
      */
-    public function __construct(\Zend_Http_Response $response, Json $json) 
+    public function __construct(Response $response, Json $json)
     {
         $this->response = $response;
         $this->json = $json;
@@ -41,7 +42,7 @@ class RequestResult implements RequestResultInterface
      */
     public function isSuccessful(): bool
     {
-        return $this->response->isSuccessful();
+        return $this->response->isSuccess();
     }
 
     /**
@@ -62,6 +63,6 @@ class RequestResult implements RequestResultInterface
      */
     public function getStatus(): int
     {
-        return $this->response->getStatus();
+        return $this->response->getStatusCode();
     }
 }

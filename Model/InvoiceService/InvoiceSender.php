@@ -4,37 +4,37 @@ declare(strict_types=1);
 namespace TradeCentric\Invoice\Model\InvoiceService;
 
 use TradeCentric\Invoice\Api\RequestInterface;
-use Magento\Framework\HTTP\ZendClientFactory;
+use Magento\Framework\HTTP\LaminasClientFactory;
 use Magento\Framework\Serialize\Serializer\Json;
 use TradeCentric\Invoice\Api\RequestResultInterfaceFactory;
-use Magento\Framework\HTTP\ZendClient;
+use Magento\Framework\HTTP\LaminasClient;
 use TradeCentric\Invoice\Api\InvoiceSenderInterface;
 use TradeCentric\Invoice\Api\RequestResultInterface;
 
 class InvoiceSender implements InvoiceSenderInterface
 {
     /**
-     * @var ZendClientFactory 
+     * @var LaminasClientFactory
      */
     private $clientFactory;
 
     /**
-     * @var RequestResultInterfaceFactory 
+     * @var RequestResultInterfaceFactory
      */
     private $resultFactory;
-    
+
     /**
-     * @var Json 
+     * @var Json
      */
     private $json;
 
     /**
-     * @param ZendClientFactory $clientFactory
+     * @param LaminasClientFactory $clientFactory
      * @param RequestResultInterfaceFactory $resultFactory
      * @param Json $json
      */
     public function __construct(
-        ZendClientFactory $clientFactory, 
+        LaminasClientFactory $clientFactory,
         RequestResultInterfaceFactory $resultFactory,
         Json $json)
     {
@@ -49,25 +49,27 @@ class InvoiceSender implements InvoiceSenderInterface
      */
     public function send(RequestInterface $request): RequestResultInterface
     {
-        /** @var \Magento\Framework\HTTP\ZendClient $client */
+        /** @var LaminasClient $client */
         $client = $this->getClient($request);
         /** @var \Zend_Http_Response $result */
-        $result = $client->request(\Zend_Http_Client::POST);
+        $client->setMethod(\Laminas\Http\Request::METHOD_POST);
+        $result = $client->send();
         return $this->resultFactory->create(['response' => $result]);
     }
 
     /**
      * @param RequestInterface $request
-     * @return ZendClient
+     * @return LaminasClient
      */
-    protected function getClient(RequestInterface $request): ZendClient
+    protected function getClient(RequestInterface $request): LaminasClient
     {
+        /** @var LaminasClient $client */
         $client = $this->clientFactory->create();
-        $client->setConfig($request->getConfig());
+        $client->setOptions($request->getConfig());
         $client->setHeaders($request->getHeaders());
         $client->setUri($request->getUri());
         $requestBody = $this->json->serialize($request->getParams());
-        $client->setRawData($requestBody);
+        $client->setRawBody($requestBody);
         return $client;
     }
 }
