@@ -122,11 +122,24 @@ class RequestBuilder implements RequestBuilderInterface
         if (!$this->uri) {
             throw new LocalizedException(__("Invoice export uri is not specified"));
         }
-        return $this->factory->create([
+        $result = $this->factory->create([
             'config' => $this->config,
             'headers' => $this->headers,
             'params' => $this->params,
             'uri' => $this->uri
         ]);
+        $this->clear();
+        return $result;
+    }
+
+    /**
+     * Clear
+     */
+    private function clear()
+    {
+        $this->config = [];
+        $this->headers = [];
+        $this->params = [];
+        $this->uri = '';
     }
 }
