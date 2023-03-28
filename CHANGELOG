@@ -1,5 +1,9 @@
 TradeCentric - Invoice
 ===========
+### 3.0.2 (2023-03-28)
+* Added Invoice on Event Options:(Manual Invoicing;Sales Order Invoice (Register);Sales Order (Status Complete)).
+* Fixed issue with partial invoicing
+
 ### 3.0.1 (2022-11-21)
 * Added sending version of the extension back to TradeCentric in the payload json
 
