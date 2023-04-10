@@ -7,17 +7,12 @@ use TradeCentric\Invoice\Api\RequestInterface;
 use Magento\Framework\HTTP\LaminasClientFactory;
 use Magento\Framework\Serialize\Serializer\Json;
 use TradeCentric\Invoice\Api\RequestResultInterfaceFactory;
-use Magento\Framework\HTTP\LaminasClient;
 use TradeCentric\Invoice\Api\InvoiceSenderInterface;
 use TradeCentric\Invoice\Api\RequestResultInterface;
+use GuzzleHttp\Client;
 
 class InvoiceSender implements InvoiceSenderInterface
 {
-    /**
-     * @var LaminasClientFactory
-     */
-    private $clientFactory;
-
     /**
      * @var RequestResultInterfaceFactory
      */
@@ -36,7 +31,8 @@ class InvoiceSender implements InvoiceSenderInterface
     public function __construct(
         LaminasClientFactory $clientFactory,
         RequestResultInterfaceFactory $resultFactory,
-        Json $json)
+        Json $json,
+    )
     {
         $this->clientFactory = $clientFactory;
         $this->resultFactory = $resultFactory;
@@ -46,30 +42,15 @@ class InvoiceSender implements InvoiceSenderInterface
     /**
      * @param RequestInterface $request
      * @return RequestResultInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function send(RequestInterface $request): RequestResultInterface
-    {
-        /** @var LaminasClient $client */
-        $client = $this->getClient($request);
-        /** @var \Zend_Http_Response $result */
-        $client->setMethod(\Laminas\Http\Request::METHOD_POST);
-        $result = $client->send();
-        return $this->resultFactory->create(['response' => $result]);
-    }
+    public function send(RequestInterface $request): RequestResultInterface {
+        $client = new Client();
+        $response = $client->request('POST', $request->getUri(), [
+            'headers' => $request->getHeaders(),
+            'json' => $request->getParams(),
+        ]);
 
-    /**
-     * @param RequestInterface $request
-     * @return LaminasClient
-     */
-    protected function getClient(RequestInterface $request): LaminasClient
-    {
-        /** @var LaminasClient $client */
-        $client = $this->clientFactory->create();
-        $client->setOptions($request->getConfig());
-        $client->setHeaders($request->getHeaders());
-        $client->setUri($request->getUri());
-        $requestBody = $this->json->serialize($request->getParams());
-        $client->setRawBody($requestBody);
-        return $client;
+        return $this->resultFactory->create(['response' => $response]);
     }
 }
