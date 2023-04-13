@@ -5,7 +5,7 @@ namespace TradeCentric\Invoice\Model;
 
 use TradeCentric\Invoice\Api\RequestResultInterface;
 use Magento\Framework\Serialize\Serializer\Json;
-use Laminas\Http\Response;
+use GuzzleHttp\Psr7\Response;
 
 class RequestResult implements RequestResultInterface
 {
@@ -32,7 +32,7 @@ class RequestResult implements RequestResultInterface
     public function getHeader(string $header): string
     {
         if ($result = $this->response->getHeader($header)) {
-            return $result;
+            return end($result);
         }
         return '';
     }
@@ -42,7 +42,7 @@ class RequestResult implements RequestResultInterface
      */
     public function isSuccessful(): bool
     {
-        return $this->response->isSuccess();
+        return $this->response->getStatusCode() === 200;
     }
 
     /**
@@ -51,7 +51,7 @@ class RequestResult implements RequestResultInterface
     public function getBody(): array
     {
         try {
-            $responseBody = $this->json->unserialize($this->response->getBody());
+            $responseBody = $this->json->unserialize($this->response->getBody()->getContents());
         } catch (\InvalidArgumentException $e) {
             $responseBody = [];
         }

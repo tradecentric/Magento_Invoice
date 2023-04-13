@@ -24,17 +24,14 @@ class InvoiceSender implements InvoiceSenderInterface
     private $json;
 
     /**
-     * @param LaminasClientFactory $clientFactory
      * @param RequestResultInterfaceFactory $resultFactory
      * @param Json $json
      */
     public function __construct(
-        LaminasClientFactory $clientFactory,
         RequestResultInterfaceFactory $resultFactory,
         Json $json,
     )
     {
-        $this->clientFactory = $clientFactory;
         $this->resultFactory = $resultFactory;
         $this->json = $json;
     }
