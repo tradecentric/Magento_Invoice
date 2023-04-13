@@ -7,6 +7,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Sales\Api\Data\InvoiceInterface;
 use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Api\InvoiceRepositoryInterface;
 use TradeCentric\Invoice\Api\InvoiceServiceInterface;
 use TradeCentric\Invoice\Api\RequestBuilderInterface;
 use TradeCentric\Invoice\Api\RequestInterface;
@@ -44,6 +45,11 @@ class InvoiceService implements InvoiceServiceInterface
     protected $invoiceSender;
 
     /**
+     * @var $invoiceRepository
+     */
+    protected $invoiceRepository;
+
+    /**
      * @var Data
      */
     protected $helper;
@@ -60,6 +66,7 @@ class InvoiceService implements InvoiceServiceInterface
         ResultValidatorInterface $resultValidator,
         StoreLoggerInterface $logger,
         InvoiceSenderInterface $invoiceSender,
+        InvoiceRepositoryInterface $invoiceRepository,
         Data $helper
     ) {
         $this->requestBuilder = $requestBuilder;
@@ -67,6 +74,7 @@ class InvoiceService implements InvoiceServiceInterface
         $this->logger = $logger;
         $this->invoiceSender = $invoiceSender;
         $this->helper = $helper;
+        $this->invoiceRepository = $invoiceRepository;
     }
 
     /**
@@ -135,6 +143,8 @@ class InvoiceService implements InvoiceServiceInterface
             $validationResult = $this->resultValidator->validate($result);
             if ($validationResult->isValid()) {
                 $invoice->addComment("Invoice transferred successfully (Reference #{$result->getBody()['result']})");
+                $invoice->setData('is_exported', 1);
+                $this->invoiceRepository->save($invoice);
                 $this->logger->info('Send invoice to punch2go after, invoice id - ' . $invoice->getIncrementId());
                 return true;
             }

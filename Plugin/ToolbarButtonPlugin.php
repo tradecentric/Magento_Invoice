@@ -63,6 +63,11 @@ class ToolbarButtonPlugin
         if (!$this->invoiceService->isOrderReadyToManualInvoiceSend($invoice->getOrder())) {
             return [$context, $buttonList];
         }
+
+        if ($invoice->getData('is_exported')) {
+            return [$context, $buttonList];
+        }
+
         $buttonList->add('transfer',
             [
                 'label'     => 'Transfer',
