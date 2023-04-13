@@ -15,6 +15,8 @@ class RequestResult implements RequestResultInterface
     /** @var Json  */
     private $json;
 
+    private ?array $content = null;
+
     /**
      * @param $response
      * @param Json $json
@@ -50,12 +52,15 @@ class RequestResult implements RequestResultInterface
      */
     public function getBody(): array
     {
-        try {
-            $responseBody = $this->json->unserialize($this->response->getBody()->getContents());
-        } catch (\InvalidArgumentException $e) {
-            $responseBody = [];
+        if (!$this->content) {
+            try {
+                $this->content = $this->json->unserialize($this->response->getBody()->getContents());
+            } catch (\InvalidArgumentException $e) {
+                $this->content = [];
+            }
         }
-        return $responseBody;
+
+        return $this->content;
     }
 
     /**
