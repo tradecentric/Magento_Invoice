@@ -5,13 +5,12 @@
     "php": "^7.0||^8.0",
     "tradecentric/module-version": "3.0.1",
     "tradecentric/module-punchout": "*",
-    "magento/framework": "~103.0.6",
     "tradecentric/module-purchase-order": "^3.0"
   },
   "suggest": {
   },
   "type": "magento2-module",
-  "version": "3.1.2-beta1",
+  "version": "3.1.2",
   "license": [
     "OSL-3.0",
     "AFL-3.0"
