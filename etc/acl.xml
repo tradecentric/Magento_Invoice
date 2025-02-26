@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
     <acl>
         <resources>
@@ -8,6 +7,14 @@
                     <resource id="Magento_Sales::sales_operation" title="Operations" translate="title" sortOrder="10">
                         <resource id="Magento_Sales::sales_invoice" >
                             <resource id="TradeCentric_Invoice::transfer" title="TradeCentric transfer invoice" translate="title" sortOrder="10" />
+                        </resource>
+                    </resource>
+                </resource>
+				
+				<resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="TradeCentric_Invoice::config_invoice" title="TradeCentric Invoice" translate="title" sortOrder="1500" />
                         </resource>
                     </resource>
                 </resource>
