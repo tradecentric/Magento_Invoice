@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "953a3c4cbc0e6e209d0cb476eb59e77b",
+    "content-hash": "14adb841e6ec0188ba90effe9737a5a4",
     "packages": [
         {
             "name": "tradecentric/module-punchout",
