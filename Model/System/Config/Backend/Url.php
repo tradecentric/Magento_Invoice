@@ -79,10 +79,20 @@ class Url extends Value
      */
     private function resolveHost(string $host): array
     {
-        $records = array_merge(
-            @dns_get_record($host, DNS_A) ?: [],
-            @dns_get_record($host, DNS_AAAA) ?: []
-        );
+        // dns_get_record() emits a warning when a record type can't be resolved;
+        // that's an expected outcome here, not an error to surface.
+        set_error_handler(static function (): bool {
+            return true;
+        });
+
+        try {
+            $records = array_merge(
+                dns_get_record($host, DNS_A) ?: [],
+                dns_get_record($host, DNS_AAAA) ?: []
+            );
+        } finally {
+            restore_error_handler();
+        }
 
         $ips = [];
         foreach ($records as $record) {
