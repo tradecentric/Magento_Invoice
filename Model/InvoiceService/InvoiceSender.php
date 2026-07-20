@@ -47,6 +47,7 @@ class InvoiceSender implements InvoiceSenderInterface
             'headers' => $request->getHeaders(),
             'json' => $request->getParams(),
             'verify' => true,
+            'allow_redirects' => false,
         ]);
 
         return $this->resultFactory->create(['response' => $response]);

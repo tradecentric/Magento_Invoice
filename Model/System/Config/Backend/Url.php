@@ -36,7 +36,10 @@ class Url extends Value
             throw new LocalizedException(__('Invoice URL must use the https scheme.'));
         }
 
-        if ($this->isDisallowedHost($parts['host'])) {
+        // parse_url() keeps the enclosing brackets on an IPv6 host (e.g. "[::1]").
+        $host = trim($parts['host'], '[]');
+
+        if ($this->isDisallowedHost($host)) {
             throw new LocalizedException(
                 __('Invoice URL may not point to a private, loopback, or link-local address.')
             );
@@ -51,14 +54,41 @@ class Url extends Value
      */
     private function isDisallowedHost(string $host): bool
     {
-        $isLiteralIp = (bool) filter_var($host, FILTER_VALIDATE_IP);
-        $ip = $isLiteralIp ? $host : gethostbyname($host);
+        $ips = filter_var($host, FILTER_VALIDATE_IP) ? [$host] : $this->resolveHost($host);
 
-        if (!$isLiteralIp && $ip === $host) {
-            // DNS resolution failed - fail closed rather than silently allow.
+        if (empty($ips)) {
+            // No IP literal and no DNS resolution - fail closed rather than silently allow.
             return true;
         }
 
-        return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false;
+        foreach (array_unique($ips) as $ip) {
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Resolve both A and AAAA records so an allowed public IPv4 address
+     * can't mask a disallowed private/reserved IPv6 address (or vice versa).
+     *
+     * @param string $host
+     * @return string[]
+     */
+    private function resolveHost(string $host): array
+    {
+        $records = array_merge(
+            @dns_get_record($host, DNS_A) ?: [],
+            @dns_get_record($host, DNS_AAAA) ?: []
+        );
+
+        $ips = [];
+        foreach ($records as $record) {
+            $ips[] = $record['ip'] ?? $record['ipv6'] ?? null;
+        }
+
+        return array_values(array_filter($ips));
     }
 }

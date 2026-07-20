@@ -31,6 +31,8 @@ class UrlTest extends TestCase
             'empty value is allowed' => [''],
             'public https host' => ['https://api.tradecentric.com/invoice'],
             'public https host, other domain' => ['https://api.example.com/invoice'],
+            'public ipv4 literal' => ['https://8.8.8.8/invoice'],
+            'public ipv6 literal' => ['https://[2001:4860:4860::8888]/invoice'],
         ];
     }
 
@@ -60,6 +62,9 @@ class UrlTest extends TestCase
             'private ip 172.16.x' => ['https://172.16.0.5/invoice'],
             'private ip 192.168.x' => ['https://192.168.0.5/invoice'],
             'unresolvable host' => ['https://this-host-should-not-resolve.invalid/invoice'],
+            'ipv6 loopback literal' => ['https://[::1]/invoice'],
+            'ipv6 link-local literal' => ['https://[fe80::1]/invoice'],
+            'ipv6 unique-local literal' => ['https://[fd00::1]/invoice'],
         ];
     }
 
