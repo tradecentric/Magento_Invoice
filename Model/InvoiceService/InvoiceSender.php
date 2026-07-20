@@ -46,6 +46,7 @@ class InvoiceSender implements InvoiceSenderInterface
         $response = $client->request('POST', $request->getUri(), [
             'headers' => $request->getHeaders(),
             'json' => $request->getParams(),
+            'verify' => true,
         ]);
 
         return $this->resultFactory->create(['response' => $response]);
