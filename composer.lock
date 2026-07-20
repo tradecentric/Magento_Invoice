@@ -4,26 +4,31 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14adb841e6ec0188ba90effe9737a5a4",
+    "content-hash": "b2e051acb721d31f6adde7ca7f43e0c6",
     "packages": [
         {
             "name": "tradecentric/module-punchout",
-            "version": "3.1.16",
+            "version": "3.1.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tradecentric/Magento_PunchOut.git",
-                "reference": "765609e77a51d6de65b110979a7c936dde8a0b27"
+                "reference": "21f5dce8b73c3f316b1e0c7b3bcbcb00a9101af6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tradecentric/Magento_PunchOut/zipball/765609e77a51d6de65b110979a7c936dde8a0b27",
-                "reference": "765609e77a51d6de65b110979a7c936dde8a0b27",
+                "url": "https://api.github.com/repos/tradecentric/Magento_PunchOut/zipball/21f5dce8b73c3f316b1e0c7b3bcbcb00a9101af6",
+                "reference": "21f5dce8b73c3f316b1e0c7b3bcbcb00a9101af6",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
                 "php": "~7.3.0||~7.4.0||^8.0",
                 "tradecentric/module-version": "*"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "magento/magento-coding-standard": "*",
+                "squizlabs/php_codesniffer": "^3.9"
             },
             "type": "magento2-module",
             "autoload": {
@@ -41,9 +46,9 @@
             ],
             "description": "TradeCentric PunchOut",
             "support": {
-                "source": "https://github.com/tradecentric/Magento_PunchOut/tree/3.1.16"
+                "source": "https://github.com/tradecentric/Magento_PunchOut/tree/3.1.19"
             },
-            "time": "2026-05-18T07:07:34+00:00"
+            "time": "2026-07-16T12:53:13+00:00"
         },
         {
             "name": "tradecentric/module-purchase-order",
@@ -434,11 +439,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.55",
+            "version": "2.2.5",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9eaac3826ed5e9b8427350a43cac825eeca3f566",
-                "reference": "9eaac3826ed5e9b8427350a43cac825eeca3f566",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/909c1e5fef7989ac0d0c1c5c42e32a5c4f6198a0",
+                "reference": "909c1e5fef7989ac0d0c1c5c42e32a5c4f6198a0",
                 "shasum": ""
             },
             "require": {
@@ -460,6 +465,17 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Mirtes"
+                },
+                {
+                    "name": "Markus Staab"
+                },
+                {
+                    "name": "Vincent Langlet"
+                }
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
             "keywords": [
@@ -483,25 +499,25 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-18T11:57:34+00:00"
+            "time": "2026-07-05T06:31:06+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "2.4.4",
+            "version": "2.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "4661c582a20f03df585d2e3fdc4af1b83d67a091"
+                "reference": "ba22f8c087848278fed6b4910d4cf1108096d8d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/4661c582a20f03df585d2e3fdc4af1b83d67a091",
-                "reference": "4661c582a20f03df585d2e3fdc4af1b83d67a091",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/ba22f8c087848278fed6b4910d4cf1108096d8d3",
+                "reference": "ba22f8c087848278fed6b4910d4cf1108096d8d3",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "phpstan/phpstan": "^2.1.48"
+                "phpstan/phpstan": "^2.2.2"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -535,7 +551,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.4.4"
+                "source": "https://github.com/rectorphp/rector/tree/2.5.7"
             },
             "funding": [
                 {
@@ -543,7 +559,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-05-20T19:30:21+00:00"
+            "time": "2026-07-13T15:24:18+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -626,16 +642,16 @@
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v15.32.3",
+            "version": "v15.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "993bf0bea17f870412ad8a90f60c41cb8d5f1145"
+                "reference": "c72fd0f82e7b992aaf35516ebf860a4729be206f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/993bf0bea17f870412ad8a90f60c41cb8d5f1145",
-                "reference": "993bf0bea17f870412ad8a90f60c41cb8d5f1145",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/c72fd0f82e7b992aaf35516ebf860a4729be206f",
+                "reference": "c72fd0f82e7b992aaf35516ebf860a4729be206f",
                 "shasum": ""
             },
             "require": {
@@ -648,14 +664,14 @@
                 "amphp/http-server": "^2.1 || ^3",
                 "dms/phpunit-arraysubset-asserts": "dev-master",
                 "ergebnis/composer-normalize": "^2.28",
-                "friendsofphp/php-cs-fixer": "3.95.1",
+                "friendsofphp/php-cs-fixer": "3.95.11",
                 "mll-lab/php-cs-fixer-config": "5.13.0",
                 "nyholm/psr7": "^1.5",
                 "phpbench/phpbench": "^1.2",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "2.1.51",
-                "phpstan/phpstan-phpunit": "2.0.16",
-                "phpstan/phpstan-strict-rules": "2.0.10",
+                "phpstan/phpstan": "2.2.5",
+                "phpstan/phpstan-phpunit": "2.0.18",
+                "phpstan/phpstan-strict-rules": "2.0.11",
                 "phpunit/phpunit": "^9.5 || ^10.5.21 || ^11",
                 "psr/http-message": "^1 || ^2",
                 "react/http": "^1.6",
@@ -690,7 +706,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v15.32.3"
+                "source": "https://github.com/webonyx/graphql-php/tree/v15.34.0"
             },
             "funding": [
                 {
@@ -702,7 +718,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-04-24T13:49:35+00:00"
+            "time": "2026-07-05T18:03:26+00:00"
         }
     ],
     "aliases": [],
@@ -714,5 +730,5 @@
         "php": "^7.0||^8.0"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
