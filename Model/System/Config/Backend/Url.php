@@ -3,17 +3,57 @@ declare(strict_types=1);
 
 namespace TradeCentric\Invoice\Model\System\Config\Backend;
 
+use Magento\Framework\App\Cache\TypeListInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Value;
+use Magento\Framework\App\State;
+use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
 
 /**
  * Validates the TradeCentric invoice export URL on save to require an
  * encrypted transport (mitigating MITM) and block private/loopback/
  * link-local hosts (mitigating SSRF via config misconfiguration) (CN-804).
+ *
+ * The private/loopback/link-local host restriction is skipped in Magento's
+ * Developer mode so local development can point this at a local mock
+ * endpoint; the https scheme requirement is enforced in every mode.
  */
 class Url extends Value
 {
     const ALLOWED_SCHEMES = ['https'];
+
+    /**
+     * @var State
+     */
+    private $appState;
+
+    /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param ScopeConfigInterface $config
+     * @param TypeListInterface $cacheTypeList
+     * @param State $appState
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param array $data
+     */
+    public function __construct(
+        Context $context,
+        Registry $registry,
+        ScopeConfigInterface $config,
+        TypeListInterface $cacheTypeList,
+        State $appState,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        $this->appState = $appState;
+        parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
+    }
 
     /**
      * @return $this
@@ -39,13 +79,21 @@ class Url extends Value
         // parse_url() keeps the enclosing brackets on an IPv6 host (e.g. "[::1]").
         $host = trim($parts['host'], '[]');
 
-        if ($this->isDisallowedHost($host)) {
+        if (!$this->isDeveloperMode() && $this->isDisallowedHost($host)) {
             throw new LocalizedException(
                 __('Invoice URL may not point to a private, loopback, or link-local address.')
             );
         }
 
         return parent::beforeSave();
+    }
+
+    /**
+     * @return bool
+     */
+    private function isDeveloperMode(): bool
+    {
+        return $this->appState->getMode() === State::MODE_DEVELOPER;
     }
 
     /**
