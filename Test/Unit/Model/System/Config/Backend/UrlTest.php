@@ -30,8 +30,8 @@ class UrlTest extends TestCase
     {
         return [
             'empty value is allowed' => [''],
-            'public https host' => ['https://api.tradecentric.com/invoice'],
-            'public https host, other domain' => ['https://api.example.com/invoice'],
+            // Literal IPs only - a hostname here would depend on live DNS
+            // resolution succeeding in whatever environment runs this test.
             'public ipv4 literal' => ['https://8.8.8.8/invoice'],
             'public ipv6 literal' => ['https://[2001:4860:4860::8888]/invoice'],
         ];
