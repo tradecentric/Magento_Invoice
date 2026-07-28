@@ -113,6 +113,25 @@ class UrlTest extends TestCase
     }
 
     /**
+     * @return void
+     */
+    public function testBeforeSaveAllowsHostnameThatResolvesToPublicIp(): void
+    {
+        $model = $this->createModelWithStubbedDns('https://mock-invoice-endpoint.test/invoice', ['93.184.216.34']);
+        $model->beforeSave();
+        $this->addToAssertionCount(1);
+    }
+
+    /**
+     * @return void
+     */
+    public function testBeforeSaveRejectsHostnameThatResolvesToPrivateIp(): void
+    {
+        $this->expectException(LocalizedException::class);
+        $this->createModelWithStubbedDns('https://mock-invoice-endpoint.test/invoice', ['10.0.0.5'])->beforeSave();
+    }
+
+    /**
      * @param string $value
      * @param string $mode
      * @return Url
@@ -126,6 +145,25 @@ class UrlTest extends TestCase
         /** @var Url $model */
         $model = $objectManager->getObject(Url::class, ['appState' => $appState]);
         $model->setValue($value);
+
+        return $model;
+    }
+
+    /**
+     * @param string $value
+     * @param string[] $ips
+     * @return UrlWithStubbedDns
+     */
+    private function createModelWithStubbedDns(string $value, array $ips): UrlWithStubbedDns
+    {
+        $appState = $this->createMock(State::class);
+        $appState->method('getMode')->willReturn(State::MODE_DEFAULT);
+
+        $objectManager = new ObjectManager($this);
+        /** @var UrlWithStubbedDns $model */
+        $model = $objectManager->getObject(UrlWithStubbedDns::class, ['appState' => $appState]);
+        $model->setValue($value);
+        $model->setStubbedIps($ips);
 
         return $model;
     }

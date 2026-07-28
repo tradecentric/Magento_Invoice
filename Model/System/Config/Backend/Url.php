@@ -125,7 +125,7 @@ class Url extends Value
      * @param string $host
      * @return string[]
      */
-    private function resolveHost(string $host): array
+    protected function resolveHost(string $host): array
     {
         // dns_get_record() emits a warning when a record type can't be resolved;
         // that's an expected outcome here, not an error to surface.
