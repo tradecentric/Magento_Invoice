@@ -12,6 +12,7 @@
                 <label>Invoice Path</label>
                 <field id="url" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Url</label>
+                    <backend_model>TradeCentric\Invoice\Model\System\Config\Backend\Url</backend_model>
                 </field>
                 <field id="key" translate="label comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API Key</label>

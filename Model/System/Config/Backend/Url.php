@@ -1,0 +1,152 @@
+<?php
+declare(strict_types=1);
+
+namespace TradeCentric\Invoice\Model\System\Config\Backend;
+
+use Magento\Framework\App\Cache\TypeListInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Value;
+use Magento\Framework\App\State;
+use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
+
+/**
+ * Validates the TradeCentric invoice export URL on save to require an
+ * encrypted transport (mitigating MITM) and block private/loopback/
+ * link-local hosts (mitigating SSRF via config misconfiguration) (CN-804).
+ *
+ * The private/loopback/link-local host restriction is skipped in Magento's
+ * Developer mode so local development can point this at a local mock
+ * endpoint; the https scheme requirement is enforced in every mode.
+ */
+class Url extends Value
+{
+    const ALLOWED_SCHEMES = ['https'];
+
+    /**
+     * @var State
+     */
+    private $appState;
+
+    /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param ScopeConfigInterface $config
+     * @param TypeListInterface $cacheTypeList
+     * @param State $appState
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param array $data
+     */
+    public function __construct(
+        Context $context,
+        Registry $registry,
+        ScopeConfigInterface $config,
+        TypeListInterface $cacheTypeList,
+        State $appState,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        $this->appState = $appState;
+        parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
+    }
+
+    /**
+     * @return $this
+     * @throws LocalizedException
+     */
+    public function beforeSave()
+    {
+        $url = trim((string) $this->getValue());
+
+        if ($url === '') {
+            return parent::beforeSave();
+        }
+
+        $parts = parse_url($url);
+        if ($parts === false || empty($parts['scheme']) || empty($parts['host'])) {
+            throw new LocalizedException(__('Invoice URL is not a valid URL.'));
+        }
+
+        if (!in_array(strtolower($parts['scheme']), self::ALLOWED_SCHEMES, true)) {
+            throw new LocalizedException(__('Invoice URL must use the https scheme.'));
+        }
+
+        // parse_url() keeps the enclosing brackets on an IPv6 host (e.g. "[::1]").
+        $host = trim($parts['host'], '[]');
+
+        if (!$this->isDeveloperMode() && $this->isDisallowedHost($host)) {
+            throw new LocalizedException(
+                __('Invoice URL may not point to a private, loopback, or link-local address.')
+            );
+        }
+
+        return parent::beforeSave();
+    }
+
+    /**
+     * @return bool
+     */
+    private function isDeveloperMode(): bool
+    {
+        return $this->appState->getMode() === State::MODE_DEVELOPER;
+    }
+
+    /**
+     * @param string $host
+     * @return bool
+     */
+    private function isDisallowedHost(string $host): bool
+    {
+        $ips = filter_var($host, FILTER_VALIDATE_IP) ? [$host] : $this->resolveHost($host);
+
+        if (empty($ips)) {
+            // No IP literal and no DNS resolution - fail closed rather than silently allow.
+            return true;
+        }
+
+        foreach (array_unique($ips) as $ip) {
+            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Resolve both A and AAAA records so an allowed public IPv4 address
+     * can't mask a disallowed private/reserved IPv6 address (or vice versa).
+     *
+     * @param string $host
+     * @return string[]
+     */
+    protected function resolveHost(string $host): array
+    {
+        // dns_get_record() emits a warning when a record type can't be resolved;
+        // that's an expected outcome here, not an error to surface.
+        set_error_handler(static function (): bool {
+            return true;
+        });
+
+        try {
+            $records = array_merge(
+                dns_get_record($host, DNS_A) ?: [],
+                dns_get_record($host, DNS_AAAA) ?: []
+            );
+        } finally {
+            restore_error_handler();
+        }
+
+        $ips = [];
+        foreach ($records as $record) {
+            $ips[] = $record['ip'] ?? $record['ipv6'] ?? null;
+        }
+
+        return array_values(array_filter($ips));
+    }
+}
